@@ -8,6 +8,9 @@ on:
 jobs:
   version:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Allow github token the permission to create release
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
