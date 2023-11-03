@@ -25,11 +25,11 @@ jobs:
           major-identifier: "break:"
           prefix: "v"
 
-      
-      - name: Use the version
+      - name: Create Release
         run: |
-          echo ${{ steps.version.outputs.version }}
-      
-      - name: Use the previous version
-        run: |
-          echo ${{ steps.version.outputs.previous-version }}
+          gh release create "${{ steps.version.outputs.version }}" \
+            --title "Release $TAG" \
+            --generate-notes \
+            --prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}     
