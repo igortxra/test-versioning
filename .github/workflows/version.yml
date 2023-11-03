@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - develop
+      - staging
+      - main
 
 jobs:
   version:
@@ -28,11 +30,21 @@ jobs:
           major-identifier: "break:"
           prefix: "v"
 
-      - name: Create Release
+      - name: Create Pre-Release
+        if: ${{ ! endsWith(github.ref, 'main') }}
         run: |
           gh release create "${{ steps.version.outputs.version }}" \
-            --title "Release $TAG" \
+            --title "Release ${{ steps.version.outputs.version }}" \
             --generate-notes \
             --prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}     
+
+      - name: Create Release
+        if: ${{ endsWith(github.ref, 'main') }}
+        run: |
+          gh release create "${{ steps.version.outputs.version }}" \
+            --title "Release ${{ steps.version.outputs.version }}" \
+            --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}     
